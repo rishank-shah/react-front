@@ -1,25 +1,47 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link,withRouter} from 'react-router-dom';
+import Signout from '../user/Signout'
+import {isAuthenticated} from '../auth/'
 
-const Menu = () =>(
+const isActive = (history,path) =>{
+    if (history.location.pathname === path)
+        return {color:"#000000"}
+    else   
+        return {color:"#ffffff"}
+}
+
+//props.history
+const Menu = ({history}) =>(
     <div>
-        <ul className="nav nav-tabs">
+        <ul className="nav nav-tabs bg-secondary text-white">
             <li className="nav-item">
-                <Link className="nav-link active" to="/">Home</Link>
+                <Link className="nav-link active" to="/" style ={isActive(history,'/')}>Home</Link>
             </li>
-            <li className="nav-item">
-                <Link className="nav-link" to="/signin">SignIn</Link>
-            </li>
-            <li className="nav-item">
-                <Link className="nav-link" to="/signup">SignUp</Link>
-            </li>
-            <li className="nav-item">
-                <Link className="nav-link" to="/">SignOut</Link>
-            </li>
+
+            {!isAuthenticated( ) && (
+                //react fragements
+                <>
+                    <li className="nav-item">
+                    <Link className="nav-link" to="/signin" style ={isActive(history,'/signin')}>SignIn</Link>
+                </li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/signup" style ={isActive(history,'/signup')}>SignUp</Link>
+                </li>
+                </>
+            )}
+            
+            {isAuthenticated() && (
+                <>
+                <li className="nav-item">
+                    <button className="nav-link btn-secondary" style ={isActive(history,'/signout')} onClick={()=> Signout(()=>history.push('/signin'))}>SignOut</button>
+                </li>
+                <li className="nav-item">
+                    <button className="nav-link btn-secondary">{isAuthenticated().user.name}</button>
+                </li>
+                </>
+            )}
         </ul>
     </div>
 )
 
-
-
-export default Menu
+export default withRouter(Menu)
