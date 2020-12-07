@@ -18,6 +18,10 @@ const Menu = ({history}) =>(
                 <Link className="nav-link active" to="/" style ={isActive(history,'/')}>Home</Link>
             </li>
 
+            <li className="nav-item">
+                <Link className="nav-link active" to="/users" style ={isActive(history,'/users')}>All Users</Link>
+            </li>
+
             {!isAuthenticated( ) && (
                 //react fragements
                 <>
@@ -36,7 +40,10 @@ const Menu = ({history}) =>(
                     <button className="nav-link btn-secondary" style ={isActive(history,'/signout')} onClick={()=> Signout(()=>history.push('/signin'))}>SignOut</button>
                 </li>
                 <li className="nav-item">
-                    <Link className="nav-link"  style ={{color:"#ffffff"}} to={`/user/${isAuthenticated().user._id}`}>{`${isAuthenticated().user.name}'s profile`}</Link>
+                    <Link className="nav-link" 
+                    style ={
+                       isActive(history,`/user/${isAuthenticated().user._id}`)
+                    } to={`/user/${isAuthenticated().user._id}`}>{`${isAuthenticated().user.name}'s profile`}</Link>
                 </li>
                 </>
             )}
