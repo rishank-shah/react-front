@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {list_users} from './userApi'
 import DefaultPorofileImg from '../img/user.png'
+import {Link} from 'react-router-dom'
+
 class Alluser extends Component{
     constructor(){
         super();
@@ -32,7 +34,7 @@ class Alluser extends Component{
                         <div className="card-body text-center">
                             <h5 className="card-title">{user.name}</h5>
                             <p className="card-text">{user.email}</p>
-                            <a href="#" className="btn btn-raised btn-sm btn-primary">View Profile</a>
+                            <Link to={`/user/${user._id}`} className="btn btn-raised btn-sm btn-primary">View Profile</Link>
                         </div>
                 </div>
             ))}

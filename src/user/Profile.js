@@ -2,6 +2,8 @@ import React,{Component} from 'react'
 import {isAuthenticated} from '../auth/'
 import {Redirect,Link} from 'react-router-dom'
 import {read_user_info} from './userApi'
+import DefaultPorofileImg from '../img/user.png'
+import DeleteUser from './DeleteUser'
 
 class Profile extends Component{
     constructor(){
@@ -33,6 +35,11 @@ class Profile extends Component{
         this.init(userId)
     }
 
+    componentWillReceiveProps (props){
+        const userId = this.props.match.params.userId
+        this.init(userId)
+    }
+
     render(){
         const redirect = this.state.redirectToSignIn
         if (redirect){
@@ -40,28 +47,40 @@ class Profile extends Component{
         }
         return (
             <div className="container">
+                <h2 className="mt-5 mb-3 text-center">Profile</h2>
                 <div className="row">
-                    <div className="col-md-6">
-                        <h2 className="mt-5 mb-5">Profile</h2>
-                        <p>
-                            Hello {isAuthenticated().user.name}
-                        </p>
-                        <p>
-                            Email: {isAuthenticated().user.email}
-                        </p>
-                        <p>
-                            {`Joined ${new Date(this.state.user.created).toDateString()}`}
-                        </p>
+                    <div className="col-md-4">
+                        <div style={{borderRadius: "50%"}}>
+                            <img src={DefaultPorofileImg} alt={this.state.user.name} 
+                            style={{
+                                width:"25vw",
+                                height: "25vw",
+                                borderTopColor: "50% 50%",
+                                borderTopRightRadius: "50% 50%",
+                                borderBottomRightRadius: "50% 50%",
+                                borderBottomLeftRadius: "50% 50%"    
+                            }}
+                            />
+                        </div>
                     </div>
-                    <div className="col-md-6">
-                        { isAuthenticated().user && isAuthenticated().user._id == this.state.user._id && (
+                    <div className="col-md-6 mt-5 ml-5">
+                        <div className="container lead mt-5">
+                                <p>
+                                    Hello {this.state.user.name}
+                                </p>
+                                <p>
+                                    Email: {this.state.user.email}
+                                </p>
+                                <p>
+                                    {`Joined ${new Date(this.state.user.created).toDateString()}`}
+                                </p>
+                        </div>
+                        { isAuthenticated().user && isAuthenticated().user._id === this.state.user._id && (
                             <div className="d-inline-block mt-5"> 
-                                <Link className="btn btn-raised btn-success mr-5" to={`user/edit/${this.state.user._id}`}>
+                                <Link className="btn btn-raised btn-success mr-5" to={`edit/${this.state.user._id}`}>
                                     Edit Profile
                                 </Link>
-                                <button className="btn btn-raised btn-danger mr-5">
-                                    Delete Profile
-                                </button>
+                                <DeleteUser userId= {this.state.user._id}/>
                             </div>
                         )}
 
