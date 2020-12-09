@@ -12,7 +12,9 @@ class EditProfile extends Component{
             email:"",
             password: "",
             redirect:false,
-            error:""
+            error:"",
+            loading:false,
+            filesize:0
         }
     }
 
@@ -31,43 +33,69 @@ class EditProfile extends Component{
             }
         })
     }
+    //client side validation
+    isValid = () =>{
+        const {name,email,password,filesize} = this.state;
+        if(filesize > 100000){
+            this.setState({error:"Image should be less than 100kb"})
+            return false
+        }
+        if(name.length === 0){
+            this.setState({error:"Name is required"})
+            return false
+        }
+        if(!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)){
+            this.setState({error:"Email is invalid"})
+            return false
+        }
+        if(password.length >= 1 && password.length<=5 ){
+            this.setState({error:"Password must be 6 characters long"})
+        }
+        return true
+    }
 
     componentDidMount(){
+        // using for image upload
+        this.userData = new FormData()
         const userId = this.props.match.params.userId
         this.init(userId)
     }
 
     handleChange = (field)=> (event) => {
+        const value = field === "photo" ?event.target.files[0] : event.target.value
+        const filesize = field === "photo" ?event.target.files[0].size : 0
+        this.userData.set(field,value)
         this.setState({
-            [field]: event.target.value
+            [field]: value,
+            filesize
         })
     }
 
     clickSubmit = (event) =>{
         event.preventDefault();
-        const {name,email,password} = this.state;
-        const user = {
-            name:name,
-            email: email,
-            password: password || undefined
-        }
-        const userId = this.state.id
-        const token = isAuthenticated().token
-        update(userId,token,user)
-        .then(data=>{
-            if(data.error){
-                if(data.error.msg)
-                    this.setState({error:data.error.msg});
-                else
-                    this.setState({error:data.error});
-            }
-            else{
-                console.log(data)
-                this.setState({
-                    redirect:true
-                })
-            }
+        this.setState({
+            loading:true
         })
+        if(this.isValid()){
+            const userId = this.state.id
+            const token = isAuthenticated().token
+            update(userId,token,this.userData)
+            .then(data=>{
+                if(data.error){
+                    if(data.error.msg)
+                        this.setState({error:data.error.msg,loading:false});
+                    else
+                        this.setState({error:data.error,loading:false});
+                }
+                else{
+                    //console.log(data)
+                    this.setState({
+                        redirect:true
+                    })
+                }
+            })
+        }
+        
     }
 
     editForm(name,email,password){
@@ -80,6 +108,11 @@ class EditProfile extends Component{
                     <div className="form-group">
                         <label className="text-muted">Email</label>
                         <input onChange={this.handleChange("email")} className="form-control" type="email" value={email}></input>
+                    </div>
+                    <div className="form-group">
+                        <label className="text-muted">Profile Pic:</label>
+                        <input onChange={this.handleChange("photo")} className="form-control"
+                        accept="image/*" type="file" ></input>
                     </div>
                     <div className="form-group">
                         <label className="text-muted">Password</label>
@@ -98,11 +131,14 @@ class EditProfile extends Component{
             <div className="container">
                 <h2 className="mt-5 mb-5">
                     Edit Profile
+                </h2>
+                    {this.state.loading?(<div className="jumbotron text-center">
+                    <h2>Loading...</h2>
+                    </div>):("")}
                     <div className="alert alert-danger" style={{display: this.state.error ? "":"none" }}>
                         {this.state.error}
                     </div>
                     { this.editForm(name,email,password) }
-                </h2>
             </div>
         )
     }

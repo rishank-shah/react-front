@@ -7,6 +7,7 @@ import Menu from './core/Menu'
 import Profile from './user/Profile'
 import Allusers from './user/Alluser'
 import EditProfile from './user/EditProfile'
+import PrivateRoute from './auth/PrivateRoute'
 
 const MainRouter = ()=>(
     <div>
@@ -17,9 +18,9 @@ const MainRouter = ()=>(
             <Route exact path="/" component={Home}></Route>
             <Route exact path="/signup" component={Signup}></Route>
             <Route exact path="/signin" component={Signin}></Route>
-            <Route exact path="/user/:userId" component={Profile}></Route>
+            <PrivateRoute exact path="/user/:userId" component={Profile}/>
             <Route exact path="/users" component={Allusers}></Route>
-            <Route exact path="/user/edit/:userId" component={EditProfile}></Route>
+            <PrivateRoute exact path="/user/edit/:userId" component={EditProfile}/>
         </Switch>
     </div>
 );
