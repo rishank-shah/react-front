@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import { Redirect } from 'react-router-dom'
 import {isAuthenticated} from '../auth/'
-import {read_user_info,update} from './userApi'
+import {read_user_info,update,updateUser} from './userApi'
+import DefaultPorofileImg from '../img/user.png'
 
 class EditProfile extends Component{
     constructor(){
@@ -14,7 +15,8 @@ class EditProfile extends Component{
             redirect:false,
             error:"",
             loading:false,
-            filesize:0
+            filesize:0,
+            about:""
         }
     }
 
@@ -29,7 +31,7 @@ class EditProfile extends Component{
                     this.setState({error:data.error});
             }
             else{
-                this.setState({id:data._id,name:data.name,email:data.email})
+                this.setState({id:data._id,name:data.name,email:data.email,about:data.about})
             }
         })
     }
@@ -62,6 +64,9 @@ class EditProfile extends Component{
     }
 
     handleChange = (field)=> (event) => {
+        this.setState({
+            error:false,
+        })
         const value = field === "photo" ?event.target.files[0] : event.target.value
         const filesize = field === "photo" ?event.target.files[0].size : 0
         this.userData.set(field,value)
@@ -73,10 +78,10 @@ class EditProfile extends Component{
 
     clickSubmit = (event) =>{
         event.preventDefault();
-        this.setState({
-            loading:true
-        })
         if(this.isValid()){
+            this.setState({
+                loading:true
+            })
             const userId = this.state.id
             const token = isAuthenticated().token
             update(userId,token,this.userData)
@@ -89,8 +94,10 @@ class EditProfile extends Component{
                 }
                 else{
                     //console.log(data)
-                    this.setState({
-                        redirect:true
+                    updateUser(data,()=>{
+                        this.setState({
+                            redirect:true
+                        })
                     })
                 }
             })
@@ -98,7 +105,7 @@ class EditProfile extends Component{
         
     }
 
-    editForm(name,email,password){
+    editForm(name,email,password,about){
         return (
             <form>
                     <div className="form-group">
@@ -115,6 +122,10 @@ class EditProfile extends Component{
                         accept="image/*" type="file" ></input>
                     </div>
                     <div className="form-group">
+                        <label className="text-muted">About</label>
+                        <textarea onChange={this.handleChange("about")} className="form-control" type="text" value={about}></textarea>
+                    </div>
+                    <div className="form-group">
                         <label className="text-muted">Password</label>
                         <input onChange={this.handleChange("password")} className="form-control" type="password" value={password}></input>
                     </div>
@@ -124,9 +135,13 @@ class EditProfile extends Component{
     }
 
     render(){
-        const {id,name,email,password,redirect} = this.state;
+        const {id,name,email,password,redirect,about} = this.state;
         if(redirect)
             return <Redirect to={`/user/${id}`}/>
+
+
+        const photoUrl = id ? `${process.env.REACT_APP_API_URL}/user/photo/${id}?${new Date().getTime()}` : DefaultPorofileImg
+
         return (
             <div className="container">
                 <h2 className="mt-5 mb-5">
@@ -138,7 +153,20 @@ class EditProfile extends Component{
                     <div className="alert alert-danger" style={{display: this.state.error ? "":"none" }}>
                         {this.state.error}
                     </div>
-                    { this.editForm(name,email,password) }
+
+
+                    <img src={photoUrl} alt={name} 
+                    onError={i=>(i.target.src = `${DefaultPorofileImg}`)}
+                    style={{
+                                width:"25vw",
+                                height: "25vw",
+                                borderTopLeftRadius: "50% 50%",
+                                borderTopRightRadius: "50% 50%",
+                                borderBottomRightRadius: "50% 50%",
+                                borderBottomLeftRadius: "50% 50%"    
+                            }}/>
+
+                    { this.editForm(name,email,password,about) }
             </div>
         )
     }

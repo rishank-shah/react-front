@@ -45,22 +45,21 @@ class Profile extends Component{
         if (redirect){
             return <Redirect to="/signin" />
         }
+        const photoUrl = this.state.user._id ? `${process.env.REACT_APP_API_URL}/user/photo/${this.state.user._id}?${new Date().getTime()}` : DefaultPorofileImg
         return (
             <div className="container">
                 <h2 className="mt-5 mb-3 text-center">Profile</h2>
                 <div className="row">
                     <div className="col-md-4">
                         <div style={{borderRadius: "50%"}}>
-                            <img src={DefaultPorofileImg} alt={this.state.user.name} 
-                            style={{
+                        <img src={photoUrl} alt={this.state.user.name} onError={i=>(i.target.src = `${DefaultPorofileImg}`)} style={{
                                 width:"25vw",
                                 height: "25vw",
-                                borderTopColor: "50% 50%",
+                                borderTopLeftRadius: "50% 50%",
                                 borderTopRightRadius: "50% 50%",
                                 borderBottomRightRadius: "50% 50%",
                                 borderBottomLeftRadius: "50% 50%"    
-                            }}
-                            />
+                            }}/>
                         </div>
                     </div>
                     <div className="col-md-6 mt-5 ml-5">
@@ -71,6 +70,7 @@ class Profile extends Component{
                                 <p>
                                     Email: {this.state.user.email}
                                 </p>
+                                    <p className="lead">About : {this.state.user.about}</p>
                                 <p>
                                     {`Joined ${new Date(this.state.user.created).toDateString()}`}
                                 </p>
