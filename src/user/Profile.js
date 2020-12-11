@@ -4,15 +4,42 @@ import {Redirect,Link} from 'react-router-dom'
 import {read_user_info} from './userApi'
 import DefaultPorofileImg from '../img/user.png'
 import DeleteUser from './DeleteUser'
+import FollowProfile from './FollowProfile'
 
 class Profile extends Component{
     constructor(){
         super()
         this.state = {
-            user: "",
-            redirectToSignIn: false
+            user: {following:[],followers:[]},
+            redirectToSignIn: false,
+            following:false,
+            error:""
         }
     }
+
+
+    checkFollow =(user) =>{
+        const jwt = isAuthenticated()
+        const match = user.followers.find(follower=>{
+            return follower._id === jwt.user._id
+        })
+        return match
+    }
+
+
+    clickFollowButton = (url) =>{
+        const userId = isAuthenticated().user._id
+        const token = isAuthenticated().token
+        url(userId,token,this.state.user._id)
+        .then(data=>{
+            if(data.error)
+                this.setState({error:data.error})
+            else{
+                this.setState({user:data,following:!this.state.following})
+            }
+        })
+    }
+
 
     init = (userId) => {
         const token = isAuthenticated().token
@@ -25,7 +52,8 @@ class Profile extends Component{
             }
             else{
                 //console.log(data)
-                this.setState({user:data})
+                let following = this.checkFollow(data)
+                this.setState({user:data,following:following})
             }
         })
     }
@@ -75,14 +103,20 @@ class Profile extends Component{
                                     {`Joined ${new Date(this.state.user.created).toDateString()}`}
                                 </p>
                         </div>
-                        { isAuthenticated().user && isAuthenticated().user._id === this.state.user._id && (
+                        { isAuthenticated().user && isAuthenticated().user._id === this.state.user._id ? (
                             <div className="d-inline-block mt-5"> 
                                 <Link className="btn btn-raised btn-success mr-5" to={`edit/${this.state.user._id}`}>
                                     Edit Profile
                                 </Link>
                                 <DeleteUser userId= {this.state.user._id}/>
                             </div>
-                        )}
+                        ):(
+                            <FollowProfile following={this.state.following}
+                            onButtonClick={this.clickFollowButton}
+                            />
+                        )
+                        
+                        }
 
                     </div>
                 </div>

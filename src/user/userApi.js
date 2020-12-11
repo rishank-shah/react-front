@@ -43,11 +43,9 @@ export const remove = (userId,token) =>{
 }
 
 export const update = (userId,token,user) =>{
-    console.log("updating",user)
     return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`,{
         method: "PUT",
         headers: {
-            //"Accept": "application/json",
             Authorization: `Bearer ${token}`
         },
         body: user
@@ -67,4 +65,21 @@ export const updateUser = (user,next) =>{
             next();
         }
     }
+}
+
+export const followApi = (userId,token,followId) =>{
+    console.log(JSON.stringify({userId,followId}))
+    return fetch(`${process.env.REACT_APP_API_URL}/user/follow`,{
+        method: "PUT",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "applocation/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({userId,followId})
+    })
+    .then(res=>{
+        return res.json()
+    })
+    .catch(err=> console.log(err))
 }
