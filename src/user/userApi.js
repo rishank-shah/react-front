@@ -3,7 +3,7 @@ export const read_user_info = (userId,token)=>{
         method: "GET",
         headers:{
             Accept: "application/json",
-            "Content-Type": "applocation/json",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         }
     })
@@ -67,19 +67,18 @@ export const updateUser = (user,next) =>{
     }
 }
 
-export const followApi = (userId,token,followId) =>{
-    console.log(JSON.stringify({userId,followId}))
-    return fetch(`${process.env.REACT_APP_API_URL}/user/follow`,{
+export const followApi = (userId, token, followId) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/user/follow`, {
         method: "PUT",
         headers: {
             Accept: "application/json",
-            "Content-Type": "applocation/json",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({userId,followId})
+        body: JSON.stringify({ userId, followId })
     })
-    .then(res=>{
-        return res.json()
-    })
-    .catch(err=> console.log(err))
-}
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
