@@ -5,7 +5,7 @@ import {read_user_info} from './userApi'
 import DefaultPorofileImg from '../img/user.png'
 import DeleteUser from './DeleteUser'
 import FollowProfile from './FollowProfile'
-
+import ProfileTabs from './ProfileTabs'
 class Profile extends Component{
     constructor(){
         super()
@@ -117,7 +117,11 @@ class Profile extends Component{
                         )
                         
                         }
-
+                        
+                    </div>
+                    <div className="col-md-12">
+                        <hr/>
+                        <ProfileTabs followers={this.state.user.followers} following={this.state.user.following}/>
                     </div>
                 </div>
             </div>
