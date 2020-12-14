@@ -43,6 +43,14 @@ const Menu = ({history}) =>(
                        isActive(history,`/findusers`)
                     } to={`findusers`}>Find People</Link>
                 </li>
+
+                <li className="nav-item">
+                    <Link className="nav-link" 
+                    style ={
+                       isActive(history,`/create-new/post`)
+                    } to={`/create-new/post`}>Create Post</Link>
+                </li>
+
                 <li className="nav-item">
                     <Link className="nav-link" 
                     style ={
