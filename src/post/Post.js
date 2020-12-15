@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {list_post} from './api'
 import {Link} from 'react-router-dom'
+import DefaultPost from '../img/post.png'
 
 class Post extends Component{
     constructor(){
@@ -30,8 +31,17 @@ class Post extends Component{
                     const postedId = post.postedBy ?`/user/${post.postedBy._id}` : ""
                     const postedName = post.postedBy ? post.postedBy.name : "Unknown"
                     return (
-                        <div className="card col-md-3 mt-3 ml-3 " style={{width: "18rem"}} key={i}>
+                        <div className="card col-md-5 mt-3 ml-4 " style={{width: "18rem"}} key={i}>
                             <div className="card-body text-center">
+
+                                <img src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`} 
+                                onError={
+                                    i=>i.target.src = `${DefaultPost}`
+                                }
+                                className="img-thumbnail mb-2 mt-2"
+                                style ={{height:"250px",width:"auto"}}
+                                alt={postedName}/>
+
                                 <h5 className="card-title">{post.title}</h5>
                                 <p className="card-text">{post.body.substring(0,100)}.....</p>
                                 <br/>

@@ -11,6 +11,7 @@ import PrivateRoute from './auth/PrivateRoute'
 import FindUser from './user/FindUser'
 import NewPost from './post/NewPost'
 import Post from './post/Post'
+import SinglePost from './post/SinglePost'
 
 const MainRouter = ()=>(
     <div>
@@ -19,6 +20,9 @@ const MainRouter = ()=>(
         <Switch>
             {/* exact is used so that url will match exactly otherwise all urls will go to / */}
             <Route exact path="/" component={Home}></Route>
+
+            <Route exact path="/post/:postId" component={SinglePost}></Route>
+
             <Route exact path="/signup" component={Signup}></Route>
             <Route exact path="/signin" component={Signin}></Route>
             <PrivateRoute exact path="/user/:userId" component={Profile}/>
