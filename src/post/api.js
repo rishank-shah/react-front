@@ -32,3 +32,17 @@ export const single_post = (postId)=>{
     })
     .catch(err=> console.log(err))
 }
+
+export const post_by_userid = (userId,token)=>{
+    return fetch(`${process.env.REACT_APP_API_URL}/posts/by/${userId}`,{
+        method: "GET",
+        headers:{
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`
+        },
+    })
+    .then(res=>{
+        return res.json()
+    })
+    .catch(err=> console.log(err))
+}

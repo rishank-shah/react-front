@@ -59,10 +59,10 @@ class Post extends Component{
         const {posts} = this.state
         return (
             <div className="container">
-                <h2 className="mt-5 mb-5">All Posts</h2>
-                
+                <h2 className="mt-5 mb-5">
+                    {posts.length? 'Recent Posts':'Loading...'}
+                </h2>
                 {this.renderPost(posts)}
-
             </div>
         )
     }

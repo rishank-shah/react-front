@@ -4,12 +4,13 @@ import DefaultPorofileImg from '../img/user.png'
 
 class ProfileTabs extends Component{
     render(){
-        const {followers,following} = this.props
+        const {followers,following,posts} = this.props
         return (
             <div>
                 <div className="row">
                     <div className="col-md-4">
                         <h3>Followers</h3>
+                        <h5>{followers.length ? '':"No followers"}</h5>
                         {followers.map((user,i)=>(
                             <div key = {i}>
                                 <div className="row">
@@ -39,6 +40,7 @@ class ProfileTabs extends Component{
                     </div>
                     <div className="col-md-4">
                         <h3>Following</h3>
+                        <h5>{following.length ? '':"No following"}</h5>
                         {following.map((user,i)=>(
                             <div key = {i}>
                                 <div className="row">
@@ -65,9 +67,25 @@ class ProfileTabs extends Component{
                             </div>
                         ))}
                     </div>
-                    {/* <div className="col-md-4">
-                        <h3>Followers</h3>
-                    </div> */}
+                    <div className="col-md-4">
+                        <h3>Posts</h3>
+                        <h5>{posts.length ? '':"No posts"}</h5>
+                        {posts.map((post,i)=>(
+                            <div key = {i}>
+                                <div className="row">
+                                    <div>
+                                    <Link to={`/post/${post._id}`}>
+                                        <div>
+                                            <p className="lead">
+                                                {post.title}
+                                            </p>
+                                        </div>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         )

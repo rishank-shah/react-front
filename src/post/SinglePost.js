@@ -51,12 +51,20 @@ class SinglePost extends Component{
         const {post} = this.state
         return (
             <div className="container mt-5 ml-5">
-                <div className="text-center">
-                    <h2>{post.title}</h2>
-                </div>
-                <div className="row">
-                    {this.renderpost(post)}
-                </div>
+                
+                {!post?(<div className="jumbotron text-center">
+                    <h2>Loading...</h2>
+                </div>):(
+                <>
+                    <div className="text-center">
+                        <h2>{post.title}</h2>
+                    </div>
+                    <div className="row">
+                        {this.renderpost(post)}
+                    </div>
+                </>
+                )}
+                
             </div>
         )
     }

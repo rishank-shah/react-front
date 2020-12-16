@@ -6,6 +6,8 @@ import DefaultPorofileImg from '../img/user.png'
 import DeleteUser from './DeleteUser'
 import FollowProfile from './FollowProfile'
 import ProfileTabs from './ProfileTabs'
+import {post_by_userid} from '../post/api'
+
 class Profile extends Component{
     constructor(){
         super()
@@ -13,7 +15,8 @@ class Profile extends Component{
             user: {following:[],followers:[]},
             redirectToSignIn: false,
             following:false,
-            error:""
+            error:"",
+            posts:[]
         }
     }
 
@@ -51,9 +54,21 @@ class Profile extends Component{
                 })
             }
             else{
-                //console.log(data)
                 let following = this.checkFollow(data)
-                this.setState({user:data,following:following})
+                this.setState({user:data,following:following});
+                this.loadPostsByUser(data._id,token)
+            }
+        })
+    }
+
+    loadPostsByUser(userId,token){
+        post_by_userid(userId,token)
+        .then(data=>{
+            if(data.error){
+                console.log(data.error)
+            }
+            else{
+                this.setState({posts:data});
             }
         })
     }
@@ -90,7 +105,7 @@ class Profile extends Component{
                             }}/>
                         </div>
                     </div>
-                    <div className="col-md-6 mt-5 ml-5">
+                    <div className="col-md-7 mt-5 ml-5">
                         <div className="container lead mt-5">
                                 <p>
                                     Hello {this.state.user.name}
@@ -108,6 +123,9 @@ class Profile extends Component{
                                 <Link className="btn btn-raised btn-success mr-5" to={`edit/${this.state.user._id}`}>
                                     Edit Profile
                                 </Link>
+                                <Link className="btn btn-raised btn-info mr-5" to={`/create-new/post`}>
+                                    Create Post
+                                </Link>
                                 <DeleteUser userId= {this.state.user._id}/>
                             </div>
                         ):(
@@ -121,7 +139,9 @@ class Profile extends Component{
                     </div>
                     <div className="col-md-12">
                         <hr/>
-                        <ProfileTabs followers={this.state.user.followers} following={this.state.user.following}/>
+                        <ProfileTabs followers={this.state.user.followers} following={this.state.user.following}
+                        posts={this.state.posts}
+                        />
                     </div>
                 </div>
             </div>
