@@ -46,3 +46,18 @@ export const post_by_userid = (userId,token)=>{
     })
     .catch(err=> console.log(err))
 }
+
+export const remove_post = (postId,token) =>{
+    return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`,{
+        method: "DELETE",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    })
+    .then(res=>{
+        return res.json()
+    })
+    .catch(err=> console.log(err))
+}

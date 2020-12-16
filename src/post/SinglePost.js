@@ -1,11 +1,33 @@
 import React,{Component} from 'react'
-import {single_post} from './api'
-import {Link} from 'react-router-dom'
+import {single_post,remove_post} from './api'
+import {Link, Redirect} from 'react-router-dom'
 import DefaultPost from '../img/post.png'
+import {isAuthenticated} from '../auth'
 
 class SinglePost extends Component{
     state = {
-        post: ''
+        post: '',
+        message:false
+    }
+
+    deletepost = () => {
+        const postId = this.state.post._id
+        remove_post(postId,isAuthenticated().token)
+        .then(data=>{
+            if(data.error){
+                console.log(data.error)
+            }
+            else{
+                this.setState({message:true})
+            }
+        })
+    }
+
+    deleteConfirm  = () =>{
+        let ans = window.confirm("Do you want to delete this post?")
+        if(ans){
+            this.deletepost()
+        }
     }
 
     componentDidMount(){
@@ -41,14 +63,28 @@ class SinglePost extends Component{
                     </p>
                     <br/>
                     <p className="mark font-italic">Posted By <Link to={postedId}>{postedName}</Link> on {new Date(post.created).toDateString()}</p>
-                    <Link to={`/`} className="btn btn-raised btn-sm btn-primary">Back</Link>
+                    
+                    <div className="d-inline-block">
+                        <Link to={`/`} className="btn btn-raised btn-sm btn-primary mr-5">Back</Link>
+                        {isAuthenticated().user && isAuthenticated().user._id === post.postedBy._id && (
+                            <>
+                            <Link to={`/post/update/${post._id}`} className="btn btn-raised btn-sm btn-secondary mr-5">Update Post</Link>
+                        
+                            <button onClick={this.deleteConfirm} className="btn btn-raised btn-sm btn-warning">Delete Post</button>
+                            </>
+                        )}
+                    </div>
+                    
                 </div>
             </div>
         )
     }
 
     render(){
-        const {post} = this.state
+        const {post,message} = this.state
+        if(message){
+            return <Redirect to={`/`}/>
+        }
         return (
             <div className="container mt-5 ml-5">
                 
