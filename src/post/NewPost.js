@@ -28,6 +28,14 @@ class NewPost extends Component{
             this.setState({error:"Title is required"})
             return false
         }
+        if(title.length > 50){
+            this.setState({error:"Title should be less than 50 characters"})
+            return false
+        }
+        if(body.length > 2000 ){
+            this.setState({error:"Body should be less than 2000 characters"})
+            return false
+        }
         if(body.length === 0){
             this.setState({error:"Body is required"})
             return false
