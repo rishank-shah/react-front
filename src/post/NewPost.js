@@ -88,14 +88,14 @@ class NewPost extends Component{
                 }
             })
         }
-        
+
     }
 
     newPostForm(title,body){
         return (
             <form>
                     <div className="form-group">
-                        <label className="text-muted">Profile Pic:</label>
+                        <label className="text-muted">Post Pic:</label>
                         <input onChange={this.handleChange("photo")} className="form-control"
                         accept="image/*" type="file" ></input>
                     </div>

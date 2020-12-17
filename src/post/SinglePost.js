@@ -50,7 +50,7 @@ class SinglePost extends Component{
             <div className="col-md-12 mt-3 ml-4 " style={{width: "18rem"}}>
                 <div className="card-body text-center">
 
-                    <img src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`} 
+                    <img src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
                     onError={
                         i=>i.target.src = `${DefaultPost}`
                     }
@@ -63,18 +63,18 @@ class SinglePost extends Component{
                     </p>
                     <br/>
                     <p className="mark font-italic">Posted By <Link to={postedId}>{postedName}</Link> on {new Date(post.created).toDateString()}</p>
-                    
+
                     <div className="d-inline-block">
                         <Link to={`/`} className="btn btn-raised btn-sm btn-primary mr-5">Back</Link>
                         {isAuthenticated().user && isAuthenticated().user._id === post.postedBy._id && (
                             <>
-                            <Link to={`/post/update/${post._id}`} className="btn btn-raised btn-sm btn-secondary mr-5">Update Post</Link>
-                        
+                            <Link to={`/post/edit/${post._id}`} className="btn btn-raised btn-sm btn-secondary mr-5">Update Post</Link>
+
                             <button onClick={this.deleteConfirm} className="btn btn-raised btn-sm btn-warning">Delete Post</button>
                             </>
                         )}
                     </div>
-                    
+
                 </div>
             </div>
         )
@@ -87,7 +87,7 @@ class SinglePost extends Component{
         }
         return (
             <div className="container mt-5 ml-5">
-                
+
                 {!post?(<div className="jumbotron text-center">
                     <h2>Loading...</h2>
                 </div>):(
@@ -100,7 +100,7 @@ class SinglePost extends Component{
                     </div>
                 </>
                 )}
-                
+
             </div>
         )
     }
