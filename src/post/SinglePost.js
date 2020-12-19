@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {single_post,remove_post} from './api'
+import {single_post,remove_post,postUnLike,postLike} from './api'
 import {Link, Redirect} from 'react-router-dom'
 import DefaultPost from '../img/post.png'
 import {isAuthenticated} from '../auth'
@@ -7,7 +7,36 @@ import {isAuthenticated} from '../auth'
 class SinglePost extends Component{
     state = {
         post: '',
-        message:false
+        message:false,
+        like:false,
+        likes:0,
+        error:'',
+        redirect:false
+    }
+
+    postLikeButton = () =>{
+        if(!isAuthenticated()){
+            this.setState({redirect:true})
+            return false
+        }
+        let call = this.state.like ? postUnLike : postLike
+        const userId = isAuthenticated().user._id
+        const postId = this.state.post._id
+        const token = isAuthenticated().token
+        call(userId,postId,token)
+        .then(data=>{
+            if(data.error){
+                this.setState({
+                    error:data.error
+                })
+            }
+            else{
+                this.setState({
+                    like: !this.state.like,
+                    likes:data.likes.length
+                })
+            }
+        })
     }
 
     deletepost = () => {
@@ -38,12 +67,22 @@ class SinglePost extends Component{
                 console.log(data.error)
             }
             else{
-                this.setState({post:data})
+                this.setState({post:data,likes:data.likes.length,
+                like: this.checkLike(data.likes)
+            })
             }
         })
     }
 
+
+    checkLike(likes){
+        const userId = isAuthenticated() &&  isAuthenticated().user._id
+        let match = likes.indexOf(userId) !== -1
+        return match
+    }
+
     renderpost(post){
+        const {likes,like} = this.state
         const postedId = post.postedBy ?`/user/${post.postedBy._id}` : ""
         const postedName = post.postedBy ? post.postedBy.name : "Unknown"
         return (
@@ -57,6 +96,17 @@ class SinglePost extends Component{
                     className="img-thumbnail mb-2 mt-2"
                     style ={{height:"250px",width:"auto"}}
                     alt={postedName}/>
+
+                    {like ? (
+                        <h3 onClick={this.postLikeButton} className="text-success">
+                            {likes} likes
+                        </h3>
+                    ) : (
+                        <h3 onClick={this.postLikeButton} className="text-danger">
+                            {likes} likes
+                        </h3>
+                    )}
+
 
                     <p className="card-text">
                         {post.body}
@@ -81,16 +131,26 @@ class SinglePost extends Component{
     }
 
     render(){
-        const {post,message} = this.state
+        const {post,message,redirect} = this.state
         if(message){
             return <Redirect to={`/`}/>
+        }
+        if(redirect){
+            return <Redirect to={`/signin`}/>
         }
         return (
             <div className="container mt-5 ml-5">
 
-                {!post?(<div className="jumbotron text-center">
-                    <h2>Loading...</h2>
-                </div>):(
+                {!post?(
+                <>
+                    <div className="jumbotron text-center">
+                        <h2>Loading...</h2>
+                    </div>
+                    <div className="alert alert-danger" style={{display: this.state.error ? "":"none" }}>
+                    {this.state.error}
+                    </div>
+                </>
+                ):(
                 <>
                     <div className="text-center">
                         <h2>{post.title}</h2>
