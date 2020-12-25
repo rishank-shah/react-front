@@ -3,6 +3,7 @@ import {single_post,remove_post,postUnLike,postLike} from './api'
 import {Link, Redirect} from 'react-router-dom'
 import DefaultPost from '../img/post.png'
 import {isAuthenticated} from '../auth'
+import Comment from './Comment'
 
 class SinglePost extends Component{
     state = {
@@ -11,7 +12,8 @@ class SinglePost extends Component{
         like:false,
         likes:0,
         error:'',
-        redirect:false
+        redirect:false,
+        comments: []
     }
 
     postLikeButton = () =>{
@@ -68,7 +70,8 @@ class SinglePost extends Component{
             }
             else{
                 this.setState({post:data,likes:data.likes.length,
-                like: this.checkLike(data.likes)
+                like: this.checkLike(data.likes),
+                comments:data.comments
             })
             }
         })
@@ -79,6 +82,12 @@ class SinglePost extends Component{
         const userId = isAuthenticated() &&  isAuthenticated().user._id
         let match = likes.indexOf(userId) !== -1
         return match
+    }
+
+    updateComment = (comments) =>{
+        this.setState({
+            comments:comments
+        })
     }
 
     renderpost(post){
@@ -161,6 +170,7 @@ class SinglePost extends Component{
                 </>
                 )}
 
+                <Comment postId={post._id} comments={this.state.comments} updateComment={this.updateComment} />
             </div>
         )
     }
