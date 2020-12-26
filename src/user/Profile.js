@@ -94,36 +94,31 @@ class Profile extends Component{
                 <h2 className="mt-5 mb-3 text-center">Profile</h2>
                 <div className="row">
                     <div className="col-md-4">
-                        <div style={{borderRadius: "50%"}}>
-                        <img src={photoUrl} alt={this.state.user.name} onError={i=>(i.target.src = `${DefaultPorofileImg}`)} style={{
-                                width:"25vw",
-                                height: "25vw",
-                                borderTopLeftRadius: "50% 50%",
-                                borderTopRightRadius: "50% 50%",
-                                borderBottomRightRadius: "50% 50%",
-                                borderBottomLeftRadius: "50% 50%"    
-                            }}/>
+                        <div className="center">
+                            <img src={photoUrl} alt={this.state.user.name} onError={i=>(i.target.src = `${DefaultPorofileImg}`)} style ={{height:"25vw",width:"25vw", display: "block",marginLeft: "auto",marginRight: "auto"}} className="img-circle" />
                         </div>
                     </div>
-                    <div className="col-md-7 mt-5 ml-5">
+                    <div className="col-md-7 mt-5 ml-4">
                         <div className="container lead mt-5">
                                 <p>
-                                    Hello {this.state.user.name}
+                                    <strong><u>UserName:</u></strong> {this.state.user.name}
                                 </p>
                                 <p>
-                                    Email: {this.state.user.email}
+                                    <strong><u>Email:</u></strong>    {this.state.user.email}
                                 </p>
-                                    <p className="lead">About : {this.state.user.about}</p>
+                                <p className="lead">
+                                    <strong><u>About:</u></strong>    {this.state.user.about}
+                                </p>
                                 <p>
-                                    {`Joined ${new Date(this.state.user.created).toDateString()}`}
+                                    <strong><u>Joined:</u></strong>{new Date(this.state.user.created).toDateString()}
                                 </p>
                         </div>
                         { isAuthenticated().user && isAuthenticated().user._id === this.state.user._id ? (
                             <div className="d-inline-block mt-5"> 
-                                <Link className="btn btn-raised btn-success mr-5" to={`edit/${this.state.user._id}`}>
+                                <Link className="btn btn-raised btn-success mr-2" to={`edit/${this.state.user._id}`}>
                                     Edit Profile
                                 </Link>
-                                <Link className="btn btn-raised btn-info mr-5" to={`/create-new/post`}>
+                                <Link className="btn btn-raised btn-info mr-2" to={`/create-new/post`}>
                                     Create Post
                                 </Link>
                                 <DeleteUser userId= {this.state.user._id}/>
@@ -138,7 +133,6 @@ class Profile extends Component{
                         
                     </div>
                     <div className="col-md-12">
-                        <hr/>
                         <ProfileTabs followers={this.state.user.followers} following={this.state.user.following}
                         posts={this.state.posts}
                         />
