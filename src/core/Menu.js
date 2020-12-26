@@ -12,14 +12,14 @@ const isActive = (history,path) =>{
 
 const Menu = ({history}) =>(
     <div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-secondary">
         <Link className="navbar-brand active" to="/" style ={isActive(history,'/')}>Home</Link>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+        <div className="collapse navbar-collapse" id="navbarText">
+            <ul className="navbar-nav mr-auto">
+            <li className="nav-item active">
                 <Link className="nav-link active" to="/users" style ={isActive(history,'/users')}>All Users</Link>
             </li>
 
@@ -56,7 +56,7 @@ const Menu = ({history}) =>(
                     </>
                 )}
             </ul>
-            <span class="navbar-text">
+            <span className="navbar-text">
             {isAuthenticated() && (
                 <Link className="nav-link" 
                 style ={

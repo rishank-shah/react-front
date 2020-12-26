@@ -4,6 +4,8 @@ import {Link, Redirect} from 'react-router-dom'
 import DefaultPost from '../img/post.png'
 import {isAuthenticated} from '../auth'
 import Comment from './Comment'
+import Like from '../img/like.png'
+import DisLike from '../img/dislike.png'
 
 class SinglePost extends Component{
     state = {
@@ -95,24 +97,24 @@ class SinglePost extends Component{
         const postedId = post.postedBy ?`/user/${post.postedBy._id}` : ""
         const postedName = post.postedBy ? post.postedBy.name : "Unknown"
         return (
-            <div className="col-md-12 mt-3 ml-4 " style={{width: "18rem"}}>
-                <div className="card-body text-center">
+            <div className="col-md-12 mt-3" >
+                <div className="card-body text-justify">
 
                     <img src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
                     onError={
                         i=>i.target.src = `${DefaultPost}`
                     }
                     className="img-thumbnail mb-2 mt-2"
-                    style ={{height:"250px",width:"auto"}}
+                    style ={{height:"250px",width:"auto",display: "block",marginLeft: "auto",marginRight: "auto"}}
                     alt={postedName}/>
 
                     {like ? (
-                        <h3 onClick={this.postLikeButton} className="text-success">
-                            {likes} likes
+                        <h3 onClick={this.postLikeButton} className="">
+                            <img src={DisLike} alt="Unlike"/>{likes} likes
                         </h3>
                     ) : (
-                        <h3 onClick={this.postLikeButton} className="text-danger">
-                            {likes} likes
+                        <h3 onClick={this.postLikeButton} className="">
+                            <img src={Like} alt="Like" />{likes} likes
                         </h3>
                     )}
 
@@ -121,18 +123,21 @@ class SinglePost extends Component{
                         {post.body}
                     </p>
                     <br/>
-                    <p className="mark font-italic">Posted By <Link to={postedId}>{postedName}</Link> on {new Date(post.created).toDateString()}</p>
+                    <div className="text-center">
+                        <p className="mark font-italic">Posted By <Link to={postedId}>{postedName}</Link> on {new Date(post.created).toDateString()}</p>
 
-                    <div className="d-inline-block">
-                        <Link to={`/`} className="btn btn-raised btn-sm btn-primary mr-5">Back</Link>
-                        {isAuthenticated().user && isAuthenticated().user._id === post.postedBy._id && (
-                            <>
-                            <Link to={`/post/edit/${post._id}`} className="btn btn-raised btn-sm btn-secondary mr-5">Update Post</Link>
+                        <div className="d-inline-block">
+                            <Link to={`/`} className="btn btn-raised btn-sm btn-primary mr-5">Back</Link>
+                            {isAuthenticated().user && isAuthenticated().user._id === post.postedBy._id && (
+                                <>
+                                <Link to={`/post/edit/${post._id}`} className="btn btn-raised btn-sm btn-secondary mr-5">Update Post</Link>
 
-                            <button onClick={this.deleteConfirm} className="btn btn-raised btn-sm btn-warning">Delete Post</button>
-                            </>
-                        )}
+                                <button onClick={this.deleteConfirm} className="btn btn-raised btn-sm btn-warning">Delete Post</button>
+                                </>
+                            )}
+                        </div>
                     </div>
+                    
 
                 </div>
             </div>
@@ -148,7 +153,7 @@ class SinglePost extends Component{
             return <Redirect to={`/signin`}/>
         }
         return (
-            <div className="container mt-5 ml-5">
+            <div className="container mt-5">
 
                 {!post?(
                 <>
